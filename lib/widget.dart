@@ -1,21 +1,18 @@
+// ignore_for_file: avoid_print, library_private_types_in_public_api, unused_import
 
-
-import 'package:cocktailapp/utils.dart';
+import 'package:login/page/forgot_password_page.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'main.dart';
-
 
 class SignUpWidget extends StatefulWidget {
   final Function() onClickedSignIn;
-  
+
   const SignUpWidget({
     Key? key,
     required this.onClickedSignIn,
-  }) : super (key: key);
+  }) : super(key: key);
 
   @override
   _SignUpWidgetState createState() => _SignUpWidgetState();
@@ -27,102 +24,104 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   final passwordController = TextEditingController();
 
   @override
-  void dispose(){
+  void dispose() {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
 
-
+  @override
   Widget build(BuildContext context) {
-     return SingleChildScrollView(
-      
-      padding: EdgeInsets.all(16),
-      child: Form(
-        key: formKey,
-        child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: 40,),
-          TextFormField(
-            controller: emailController,
-            cursorColor: Colors.white,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(labelText: 'Correo Electronico'),
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (email) => 
-            email != null && !EmailValidator.validate(email)
-            ? 'Ingresa un correo valido'
-            :null,
-          ),
-          TextFormField(
-            controller: passwordController,
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(labelText: 'Contraseña'),
-            obscureText: true,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) => value != null && value.length < 6
-            ? 'Ingresa minimo 6 caracteres'
-            :null,
-          ),
-          SizedBox(height: 20,),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              minimumSize: Size.fromHeight(50),
-            ),
-            icon: Icon(Icons.lock_open, size: 32,),
-            label: Text(
-              'Registrarse',
-              style: TextStyle(fontSize: 24),
+    return SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 200,
               ),
-            onPressed: signUp,
+              TextFormField(
+                controller: emailController,
+                cursorColor: Colors.white,
+                textInputAction: TextInputAction.next,
+                decoration: const InputDecoration(labelText: 'Correo'),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (email) =>
+                    email != null && !EmailValidator.validate(email)
+                        ? 'Ingresa un correo valido'
+                        : null,
+              ),
+              TextFormField(
+                controller: passwordController,
+                textInputAction: TextInputAction.done,
+                decoration: const InputDecoration(labelText: 'Password'),
+                obscureText: true,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) => value != null && value.length < 6
+                    ? 'Ingresa minimo 6 caracteres'
+                    : null,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(50),
+                ),
+                icon: const Icon(
+                  Icons.app_registration_rounded,
+                  size: 32,
+                ),
+                label: const Text(
+                  'Registrarse',
+                  style: TextStyle(fontSize: 24),
+                ),
+                onPressed: signUp,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(50),
+                ),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 32,
+                ),
+                label: const Text(
+                  'Volver',
+                  style: TextStyle(fontSize: 24),
+                ),
+                onPressed: widget.onClickedSignIn,
+              ),
+            ],
           ),
-          SizedBox(height: 24,),
-          RichText(
-            text: TextSpan(
-              text: '¿Ya tienes una cuenta? ',
-              children: [
-                TextSpan(
-                  recognizer: TapGestureRecognizer()
-                  ..onTap = widget.onClickedSignIn,
-                  text: 'Inicia sesión',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Theme.of(context).colorScheme.secondary
-                  )
-                  )
-              ]
-            )
-            )
-        ],
-      ),
-      )
-    );
+        ));
   }
-  Future signUp() async{
+
+  Future signUp() async {
     final isValid = formKey.currentState!.validate();
-    if(!isValid) return;
+    if (!isValid) return;
 
     showDialog(
-      context: context,
-      barrierDismissible: false, 
-      builder: (context) => Center(child: CircularProgressIndicator(),));
-  try {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: emailController.text.trim(), 
-      password: passwordController.text.trim()
-      );
-  } on FirebaseAuthException catch (e) {
-    print(e);
-
-    Utils.showSnackBar(e.message);
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+              child: CircularProgressIndicator(),
+            ));
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
-    //Navigator.of(context) not working!
-    navigatorKey.currentState!.popUntil((route)=>route.isFirst);
-  }
-
 }
-
 
 class LoginWidget extends StatefulWidget {
   final VoidCallback onClickedSignUp;
@@ -130,9 +129,6 @@ class LoginWidget extends StatefulWidget {
     Key? key,
     required this.onClickedSignUp,
   }) : super(key: key);
-  
-
-
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
@@ -143,91 +139,107 @@ class _LoginWidgetState extends State<LoginWidget> {
   final passwordController = TextEditingController();
 
   @override
-  void dispose(){
+  void dispose() {
     emailController.dispose();
     passwordController.dispose();
 
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        
         children: [
-          
-          SizedBox(height: 40,),
+          const SizedBox(
+            height: 200,
+          ),
           TextFormField(
             controller: emailController,
-            cursorColor: Colors.white,
+            cursorColor: Colors.black,
             textInputAction: TextInputAction.next,
-            decoration: InputDecoration(labelText: 'Correo Electronico'),
+            decoration: const InputDecoration(labelText: 'Correo'),
           ),
           TextFormField(
             controller: passwordController,
             textInputAction: TextInputAction.done,
-            decoration: InputDecoration(labelText: 'Contraseña'),
+            decoration: const InputDecoration(labelText: 'Password'),
             obscureText: true,
           ),
-          SizedBox(height: 20,),
+          const SizedBox(
+            height: 50,
+          ),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              minimumSize: Size.fromHeight(50),
+              minimumSize: const Size.fromHeight(50),
             ),
-            icon: Icon(Icons.lock_open, size: 32,),
-            label: Text(
+            icon: const Icon(
+              Icons.verified_user_outlined,
+              size: 32,
+            ),
+            label: const Text(
               'Iniciar sesión',
               style: TextStyle(fontSize: 24),
-              ),
+            ),
             onPressed: signIn,
           ),
-          SizedBox(height: 24,),
-          RichText(
-            text: TextSpan(
-              text: '¿No tienes cuenta?',
-              children: [
-                TextSpan(
-                  recognizer: TapGestureRecognizer()
-                  ..onTap = widget.onClickedSignUp,
-                  text: 'Registrate',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Theme.of(context).colorScheme.secondary
-                  )
-                  )
-              ]
-            )
-            )
+          const SizedBox(
+            height: 24,
+          ),
+          ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(50),
+              ),
+              icon: const Icon(
+                Icons.app_registration_outlined,
+                size: 32,
+              ),
+              label: const Text(
+                'Registrarse',
+                style: TextStyle(fontSize: 24),
+              ),
+              onPressed: widget.onClickedSignUp),
+          const SizedBox(
+            height: 24,
+          ),
+          GestureDetector(
+            child: const Text(
+              'Olvidaste tu Password?',
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+                color: Colors.black87,
+                fontSize: 20,
+              ),
+            ),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const ForgotPasswordPage(),
+            )),
+          ),
+          const SizedBox(
+            height: 24,
+          ),
         ],
       ),
-
-
     );
-    
   }
+
   Future signIn() async {
     showDialog(
       context: context,
-      barrierDismissible: false, 
-      builder: (context)=>Center(child: CircularProgressIndicator()),
-      );
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
 
-    try{
+    try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(), 
+        email: emailController.text.trim(),
         password: passwordController.text.trim(),
-        );
+      );
     } on FirebaseAuthException catch (e) {
       print(e);
     }
-
-    //Navigator.of(context) not working!
-     navigatorKey.currentState!.popUntil((route)=>route.isFirst);
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }

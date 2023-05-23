@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "661245350343",
-    "project_id": "cocktailapp-37be2",
-    "storage_bucket": "cocktailapp-37be2.appspot.com"
+    "project_number": "779774338777",
+    "project_id": "login-edd4d",
+    "storage_bucket": "login-edd4d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:661245350343:android:af0d5c0aa05fa9fe71c9e2",
+        "mobilesdk_app_id": "1:779774338777:android:ccca3dcc7094c94a9f00c8",
         "android_client_info": {
-          "package_name": "com.example.cocktailapp"
+          "package_name": "com.example.login"
         }
       },
       "oauth_client": [
         {
-          "client_id": "661245350343-cmqj7rperqjmqi0jrg0v5e8702gq0qi0.apps.googleusercontent.com",
+          "client_id": "779774338777-c2sorqpgv6gq7pgelnd9q9j7tejuf15m.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBRJpaDZHiWenrZ-o6O1EqRPT52LJITMjA"
+          "current_key": "AIzaSyB8w9t1BzOxO-mM56AwMfNZSgYcltmi0uY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "661245350343-cmqj7rperqjmqi0jrg0v5e8702gq0qi0.apps.googleusercontent.com",
+              "client_id": "779774338777-c2sorqpgv6gq7pgelnd9q9j7tejuf15m.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
